@@ -1,0 +1,5 @@
+Data/__pycache__
+Data/test.zip
+Data/train.zip
+Data/labels.csv
+Data/sample_submission.csv

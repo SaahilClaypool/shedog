@@ -11,18 +11,18 @@ data_dir = '/home/sclaypool/gitProjects/DogApp/Data/'
 url_file = join(data_dir, 'urls.json')
 urls = json.load(open(url_file, 'r'))
 
-
-def init_traits():
-    _traits = {'weight': [],
-               'height': [],
-               'group': ['hound'],
-               'coat': ['short', 'medium', 'long', 'curly', 'hairless'],
-               'ear': ['pointed', 'round', 'long'],
-               'build': ['skinny', 'muscular', 'squat', 'normal'],
-               }
-    return _traits
-
-traits = init_traits()
+trait_file = join(data_dir, 'traits.json')
+traits = json.load(open(trait_file, 'r'))
+ 
+# def init_traits():
+    # _traits = {'weight': [],
+               # 'height': [],
+               # 'group': ['hound'],
+               # 'coat': ['short', 'medium', 'long', 'curly', 'hairless'],
+               # 'ear': ['pointed', 'round', 'long'],
+               # 'build': ['skinny', 'muscular', 'squat', 'normal'],
+               # }
+    # return _traits
 
 def load_labs():
     labs = pd.read_csv(join(data_dir, 'labels.csv'))
@@ -41,6 +41,8 @@ def get_resp(trait, vals):
             resp2 = input()
             if len(resp) > 0 and resp2[0] == 'y':
                 traits[trait].append(resp)
+                with open(trait_file, 'w'):
+                    json.dump(traits, trait_file)
             else:
                 resp = get_resp(traits, vals)
 

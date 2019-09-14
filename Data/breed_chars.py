@@ -41,8 +41,8 @@ def get_resp(trait, vals):
             resp2 = input()
             if len(resp) > 0 and resp2[0] == 'y':
                 traits[trait].append(resp)
-                with open(trait_file, 'w'):
-                    json.dump(traits, trait_file)
+                with open(trait_file, 'w') as tf:
+                    json.dump(traits, tf)
             else:
                 resp = get_resp(traits, vals)
 
@@ -105,3 +105,5 @@ def document_breeds(breeds):
 
 if __name__ == "__main__":
     print("load_characteristics")
+    l = load_labs()
+    b = l.breed.unique()

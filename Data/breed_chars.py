@@ -107,3 +107,4 @@ if __name__ == "__main__":
     print("load_characteristics")
     l = load_labs()
     b = l.breed.unique()
+    # document_breeds(b)

@@ -44,7 +44,7 @@ def get_resp(trait, vals):
                 with open(trait_file, 'w') as tf:
                     json.dump(traits, tf)
             else:
-                resp = get_resp(traits, vals)
+                resp = get_resp(trait, vals)
 
     return resp
 
@@ -56,7 +56,7 @@ def open_image(breed):
         url = urls[breed]
         update = False
     # os.system(f"google-chrome --new-window https://www.bing.com/images/search?q={breed.replace(' ', '+')}&FORM=HDRSC2")
-    os.system(f"google-chrome --new-window {url}")
+    os.system(f"google-chrome {url}")
 
 
     if (update):
@@ -87,14 +87,23 @@ def document_breeds(breeds):
     with open(json_file, 'r') as prev_data:
         dog_dict = json.load(prev_data)
 
-    for breed in breeds:
-        edit = True
+    cont = False
+    for i, breed in enumerate(breeds):
+        if not cont:
+            edit = True
         if breed in dog_dict.keys():
-            print(f"current for {breed}: {dog_dict[breed]}")
-            resp = input("do you want to edit? (y/n)").strip().lower()
-            if len(resp) > 0 and resp[0] == 'n':
-                edit = False
+            print(f"{i} / {len(breeds)}. current for {breed}: {dog_dict[breed]}")
+            if not cont:
+                resp = input("do you want to edit? (y/n/c)").strip().lower()
+                if len(resp) > 0 and resp[0] == 'n':
+                    edit = False
+                elif len(resp) > 0 and resp[0] == 'c':
+                    edit = False
+                    cont = True
+        else:
+            cont = False
         if edit:
+            print(f"{i} / {len(breeds)}")
             vals = document(breed)
             dog_dict[breed] = vals
 
@@ -107,4 +116,5 @@ if __name__ == "__main__":
     print("load_characteristics")
     l = load_labs()
     b = l.breed.unique()
-    # document_breeds(b)
+    print(b)
+    document_breeds(b)

@@ -105,10 +105,9 @@ def breed_to_trait_vec(breed, data, col_options):
 def char_dataframe(labels):
     """
     Given the labels like "image_id": "breed",
-    turn them into a dataframe like "image_id": [c1, c2, c3]
+    turn them into a dataframe like [id, c1, c2, c3]
     """
     cols, orig_cols = char_columns()
-    df = pd.DataFrame(columns=cols)
     data = open_trait_data()
 
     trait_dict = {}
@@ -117,12 +116,17 @@ def char_dataframe(labels):
     for breed in labels['breed'].unique():
         trait_dict[breed] = breed_to_trait_vec(breed, data, orig_cols)
 
-    print(trait_dict)
+    def f(row):
+        d = trait_dict[row['breed']]
+        d['id'] = row['id']
+        return d
+
+    df2 = pd.DataFrame(pd.DataFrame.from_records(list(labels.apply(f, axis = 1)))[cols])
+    return df2
+
 
 def split_train_characteristics(labels):
     """
-    Load the breed characteristics. 
-    Transform each [id, breed] into [id, c1, c2, c3...]
     """
     rnd = np.random.random(len(labels))
     # Make training 80%, validation 80%
@@ -130,9 +134,19 @@ def split_train_characteristics(labels):
     train_idx = rnd < 0.8
     valid_idx = rnd >= 0.8
 
-    l_pivot = labels.pivot('id', 'breed').reset_index().fillna(0)
+    labels['target'] = 1
 
-    y_train = labels
+    id_to_breed_vec = labels.pivot('id', 'breed', 'target').reset_index().fillna(0)
+
+    ytr_2 = id_to_breed_vec[train_idx]
+    yv_2 = id_to_breed_vec[valid_idx]
+
+    # make a matrix of id -> breed
+    trait_df = char_dataframe(labels)
+    ytr_1 = trait_df[train_idx]
+    yv_1 = trait_df[valid_idx]
+
+    return ytr_1, yv_1, ytr_2, yv_2
 
 if __name__ == "__main__":
     print("hello world")

@@ -3,3 +3,6 @@ Data/test.zip
 Data/train.zip
 Data/labels.csv
 Data/sample_submission.csv
+Data/train/
+*.pyc
+__pycache__/

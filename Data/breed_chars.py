@@ -102,6 +102,7 @@ def document_breeds(breeds):
                     cont = True
         else:
             cont = False
+            edit = True
         if edit:
             print(f"{i} / {len(breeds)}")
             vals = document(breed)
